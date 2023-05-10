@@ -12,8 +12,11 @@
   "dependencies": {
     "@strapi/plugin-i18n": "4.8.2",
     "@strapi/plugin-users-permissions": "4.8.2",
+    "@strapi/provider-email-sendgrid": "^4.10.4",
+    "@strapi/provider-upload-aws-s3": "^4.10.4",
     "@strapi/strapi": "4.8.2",
     "better-sqlite3": "8.0.1",
+    "pg": "^8.10.0",
     "stripe": "^11.16.0"
   },
   "author": {
