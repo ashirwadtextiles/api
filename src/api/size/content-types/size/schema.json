@@ -1,0 +1,55 @@
+{
+  "kind": "collectionType",
+  "collectionName": "sizes",
+  "info": {
+    "singularName": "size",
+    "pluralName": "sizes",
+    "displayName": "sizes",
+    "description": ""
+  },
+  "options": {
+    "draftAndPublish": true
+  },
+  "pluginOptions": {},
+  "attributes": {
+    "product_id": {
+      "type": "integer"
+    },
+    "out_of_stock": {
+      "type": "boolean"
+    },
+    "size1": {
+      "type": "string"
+    },
+    "size2": {
+      "type": "string"
+    },
+    "size3": {
+      "type": "string"
+    },
+    "size4": {
+      "type": "string"
+    },
+    "size5": {
+      "type": "string"
+    },
+    "size6": {
+      "type": "string"
+    },
+    "size7": {
+      "type": "string"
+    },
+    "size8": {
+      "type": "string"
+    },
+    "size9": {
+      "type": "string"
+    },
+    "size10": {
+      "type": "string"
+    },
+    "Product_Title": {
+      "type": "string"
+    }
+  }
+}
