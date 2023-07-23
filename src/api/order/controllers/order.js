@@ -8,8 +8,9 @@ const { createCoreController } = require("@strapi/strapi").factories;
 
 module.exports = createCoreController("api::order.order", ({ strapi }) => ({
   async create(ctx) {
-    const { products } = ctx.request.body;
+    const { products,formData } = ctx.request.body;
     try {
+      console.log({formData});
       const lineItems = await Promise.all(
         products.map(async (product) => {
           const imgUrl = "http://api.rebirthclothing.in" + (product.attributes.img.data[0].attributes.url);
@@ -65,7 +66,7 @@ module.exports = createCoreController("api::order.order", ({ strapi }) => ({
       // const createdOrder = await strapi.query("orders").create(newOrder);
       const createdOrder =  await strapi
         .service("api::order.order")
-        .create({ data: { products, razorpayOrderId: order.id } });
+        .create({ data: { products, razorpayOrderId: order.id,formData } });
 
       if (!createdOrder) {
         throw new Error("Failed to create order.");
