@@ -8,9 +8,19 @@ const { createCoreController } = require("@strapi/strapi").factories;
 
 module.exports = createCoreController("api::order.order", ({ strapi }) => ({
   async create(ctx) {
-    const { products,formData } = ctx.request.body;
+    const { products, formData, razorpayOrderId, okPayment } = ctx.request.body;
     try {
-      console.log({formData});
+      if (okPayment) {
+        const createdOrder = await strapi
+          .service("api::order.order")
+          .create({ data: { products, razorpayOrderId: razorpayOrderId, formData } });
+        if (!createdOrder) {
+          throw new Error("Failed to create order.");
+        }
+        console.log({ createdOrder });
+        return;
+      }
+      console.log({ formData });
       const lineItems = await Promise.all(
         products.map(async (product) => {
           const imgUrl = "http://api.rebirthclothing.in" + (product.attributes.img.data[0].attributes.url);
@@ -27,7 +37,7 @@ module.exports = createCoreController("api::order.order", ({ strapi }) => ({
               }, {});
 
             return { sizes };
-          }); 
+          });
           const result = filteredArray.map(item => {
             const sizes = Object.entries(item.sizes)
               .map(([key, value]) => `${key}: ${value} pc(s)`)
@@ -49,30 +59,23 @@ module.exports = createCoreController("api::order.order", ({ strapi }) => ({
             quantity: product.attributes.quantity,
           };
         })
-      );                                                        
+      );
       const razorpay = new Razorpay({
         key_id: "rzp_test_8pvp8ESL0GD1VS", // Replace with your Razorpay key ID
         key_secret: "QQVxcAQentO8IuJyRMY3iuao", // Replace with your Razorpay key secret
       });
       const totalUnitAmount = lineItems.map(item => item.price_data.unit_amount)
-      .reduce((accumulator, currentValue) => accumulator + currentValue, 0);
+        .reduce((accumulator, currentValue) => accumulator + currentValue, 0);
       const options = {
-        amount:totalUnitAmount,
+        amount: totalUnitAmount,
         currency: "INR",
         receipt: "order_receipt",
       };
       const order = await razorpay.orders.create(options);
 
       // const createdOrder = await strapi.query("orders").create(newOrder);
-      const createdOrder =  await strapi
-        .service("api::order.order")
-        .create({ data: { products, razorpayOrderId: order.id,formData } });
 
-      if (!createdOrder) {
-        throw new Error("Failed to create order.");
-      }
-      console.log({createdOrder});
-      return { razorpayOrderId: order.id,lineItems };
+      return { razorpayOrderId: order.id, lineItems };
     } catch (error) {
       console.error("Error creating order:", error);
       ctx.response.status = 500;
