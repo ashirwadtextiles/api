@@ -41,11 +41,12 @@ module.exports = createCoreController("api::order.order", ({ strapi }) => ({
                 .service("api::order.order")
                 .create({
                   data: {
-                    products,
+                    products: cartItems,
                     razorpayOrderId: "Success",
                     formData: {
                       "Transaction": "Successful",
-                      "TransactionID": transactionID
+                      "TransactionID": transactionID,
+                      formData
                     }
                   }
                 });
